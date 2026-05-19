@@ -1,0 +1,38 @@
+name: US Weather Push
+
+on:
+  # 每天北京时间 7:30 (UTC 23:30 前一天)
+  schedule:
+    - cron: '30 23 * * *'
+  # 手动触发
+  workflow_dispatch:
+
+jobs:
+  weather:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - run: pip install requests
+
+      - name: Run weather push
+        env:
+          # 邮件推送（推荐，完全免费）
+          EMAIL_SMTP: ${{ secrets.EMAIL_SMTP }}
+          EMAIL_PORT: ${{ secrets.EMAIL_PORT }}
+          EMAIL_SENDER: ${{ secrets.EMAIL_SENDER }}
+          EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
+          EMAIL_RECEIVER: ${{ secrets.EMAIL_RECEIVER }}
+          # 企业微信 Webhook（推荐，完全免费）
+          WECOM_WEBHOOK: ${{ secrets.WECOM_WEBHOOK }}
+          # 飞书 Webhook（完全免费）
+          FEISHU_WEBHOOK: ${{ secrets.FEISHU_WEBHOOK }}
+          # 钉钉 Webhook（完全免费）
+          DINGTALK_WEBHOOK: ${{ secrets.DINGTALK_WEBHOOK }}
+          # PushPlus（免费每天200条）
+          PUSHPLUS_TOKEN: ${{ secrets.PUSHPLUS_TOKEN }}
+        run: python weather.py
