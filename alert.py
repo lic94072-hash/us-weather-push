@@ -7,7 +7,7 @@ import sys
 import io
 import requests
 from datetime import datetime, timezone, timedelta
-from config import REGIONS, ALL_STATES, ALERT_CN, SEVERITY_CN
+from config import REGIONS, ALL_STATES, ALERT_CN, SEVERITY_CN, STATE_FULL_CN, STATE_CN, AREA_TERM_CN
 
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
@@ -22,6 +22,55 @@ ET = timezone(timedelta(hours=-5))
 
 # 只关注严重和极端级别
 CRITICAL_SEVERITIES = ["Extreme", "Severe"]
+
+
+def translate_area(area_text):
+    """将 NWS 区域描述翻译成中文"""
+    import re
+    if not area_text:
+        return ""
+    text = area_text
+    # 替换多词术语（按长度降序，避免部分匹配）
+    for en in sorted(AREA_TERM_CN, key=len, reverse=True):
+        text = text.replace(en, AREA_TERM_CN[en])
+    # 替换州全名（按长度降序）
+    for en in sorted(STATE_FULL_CN, key=len, reverse=True):
+        text = text.replace(en, STATE_FULL_CN[en])
+    # 替换州代码（如 ", LA" → ", 路易斯安那州"）
+    for code, cn in STATE_CN.items():
+        text = re.sub(r',\s*' + code + r'\b', f', {cn}', text)
+        text = re.sub(r'\b' + code + r'\b', cn, text)
+    # 替换剩余常见词
+    text = text.replace(" and ", "、").replace("; ", "；")
+    # County → 县
+    text = text.replace(" County", "县").replace(" county", "县")
+    return text
+
+
+def translate_headline(headline):
+    """将 NWS 预警标题翻译成中文"""
+    import re
+    if not headline:
+        return ""
+    # NWS 标准格式: "{Event} issued {Month} {Day} at {Time} {TZ} until {Month} {Day} at {Time} {TZ} by NWS {Office}"
+    # 或简短格式: "{Event} issued {Month} {Day} at {Time} {TZ} by NWS {Office}"
+    m = re.match(r'(.+?) issued (.*?) by NWS (.+)', headline)
+    if not m:
+        return translate_area(headline)
+    event_en = m.group(1).strip()
+    time_part = m.group(2).strip()
+    event_cn = ALERT_CN.get(event_en, event_en)
+    # 解析时间: "May 19 at 10:03AM CDT until May 24 at 7:00AM CDT"
+    until_m = re.match(r'(\w+ \d+) at (\S+) (\S+) until (\w+ \d+) at (\S+) (\S+)', time_part)
+    if until_m:
+        s_date, s_time, s_tz, e_date, e_time, e_tz = until_m.groups()
+        return f"{event_cn}，{s_date} {s_time}({s_tz})发布，有效期至{e_date} {e_time}({e_tz})"
+    # 无 until 的简短格式
+    short_m = re.match(r'(\w+ \d+) at (\S+) (\S+)', time_part)
+    if short_m:
+        s_date, s_time, s_tz = short_m.groups()
+        return f"{event_cn}，{s_date} {s_time}({s_tz})发布"
+    return f"{event_cn}，{translate_area(time_part)}"
 
 
 def get_all_alerts():
@@ -116,10 +165,10 @@ def build_alert_message(alerts):
         for a in region_alerts:
             marker = "!!!" if a["severity"] == "Extreme" else "!!"
             lines.append(f"  {marker} [{a['severity_cn']}] {a['event_cn']}")
-            lines.append(f"     原文: {a['event']}")
-            lines.append(f"     区域: {a['area']}")
+            lines.append(f"     类型: {a['event_cn']}（{a['event']}）")
+            lines.append(f"     区域: {translate_area(a['area'])}")
             if a["headline"]:
-                lines.append(f"     概要: {a['headline']}")
+                lines.append(f"     概要: {translate_headline(a['headline'])}")
             if a["expires"]:
                 lines.append(f"     到期: {a['expires']}")
             lines.append("")

@@ -132,6 +132,68 @@ MIN_SEVERITY = "Moderate"
 # 预报天数（NWS 最多 7 天）
 FORECAST_DAYS = 7
 
+# 美国州名英文全称 → 中文
+STATE_FULL_CN = {
+    "Alabama": "阿拉巴马", "Alaska": "阿拉斯加", "Arizona": "亚利桑那",
+    "Arkansas": "阿肯色", "California": "加利福尼亚", "Colorado": "科罗拉多",
+    "Connecticut": "康涅狄格", "Delaware": "特拉华", "Florida": "佛罗里达",
+    "Georgia": "佐治亚", "Hawaii": "夏威夷", "Idaho": "爱达荷",
+    "Illinois": "伊利诺伊", "Indiana": "印第安纳", "Iowa": "爱荷华",
+    "Kansas": "堪萨斯", "Kentucky": "肯塔基", "Louisiana": "路易斯安那",
+    "Maine": "缅因", "Maryland": "马里兰", "Massachusetts": "马萨诸塞",
+    "Michigan": "密歇根", "Minnesota": "明尼苏达", "Mississippi": "密西西比",
+    "Missouri": "密苏里", "Montana": "蒙大拿", "Nebraska": "内布拉斯加",
+    "Nevada": "内华达", "New Hampshire": "新罕布什尔", "New Jersey": "新泽西",
+    "New Mexico": "新墨西哥", "New York": "纽约", "North Carolina": "北卡罗来纳",
+    "North Dakota": "北达科他", "Ohio": "俄亥俄", "Oklahoma": "俄克拉荷马",
+    "Oregon": "俄勒冈", "Pennsylvania": "宾夕法尼亚", "Rhode Island": "罗德岛",
+    "South Carolina": "南卡罗来纳", "South Dakota": "南达科他", "Tennessee": "田纳西",
+    "Texas": "德克萨斯", "Utah": "犹他", "Vermont": "佛蒙特",
+    "Virginia": "弗吉尼亚", "Washington": "华盛顿", "West Virginia": "西弗吉尼亚",
+    "Wisconsin": "威斯康星", "Wyoming": "怀俄明",
+    "District of Columbia": "华盛顿特区",
+}
+
+# 美国州代码 → 中文
+STATE_CN = {
+    "AL": "阿拉巴马", "AK": "阿拉斯加", "AZ": "亚利桑那", "AR": "阿肯色",
+    "CA": "加利福尼亚", "CO": "科罗拉多", "CT": "康涅狄格", "DE": "特拉华",
+    "FL": "佛罗里达", "GA": "佐治亚", "HI": "夏威夷", "ID": "爱达荷",
+    "IL": "伊利诺伊", "IN": "印第安纳", "IA": "爱荷华", "KS": "堪萨斯",
+    "KY": "肯塔基", "LA": "路易斯安那", "ME": "缅因", "MD": "马里兰",
+    "MA": "马萨诸塞", "MI": "密歇根", "MN": "明尼苏达", "MS": "密西西比",
+    "MO": "密苏里", "MT": "蒙大拿", "NE": "内布拉斯加", "NV": "内华达",
+    "NH": "新罕布什尔", "NJ": "新泽西", "NM": "新墨西哥", "NY": "纽约",
+    "NC": "北卡罗来纳", "ND": "北达科他", "OH": "俄亥俄", "OK": "俄克拉荷马",
+    "OR": "俄勒冈", "PA": "宾夕法尼亚", "RI": "罗德岛", "SC": "南卡罗来纳",
+    "SD": "南达科他", "TN": "田纳西", "TX": "德克萨斯", "UT": "犹他",
+    "VT": "佛蒙特", "VA": "弗吉尼亚", "WA": "华盛顿", "WV": "西弗吉尼亚",
+    "WI": "威斯康星", "WY": "怀俄明", "DC": "华盛顿特区",
+}
+
+# 区域描述常用词英文 → 中文
+AREA_TERM_CN = {
+    "Northern": "北部", "Southern": "南部", "Eastern": "东部", "Western": "西部",
+    "North": "北", "South": "南", "East": "东", "West": "西",
+    "Northeast": "东北", "Northwest": "西北", "Southeast": "东南", "Southwest": "西南",
+    "North Central": "中北部", "South Central": "中南部",
+    "East Central": "中东", "West Central": "中西",
+    "Central": "中部", "Upper": "上游", "Lower": "下游",
+    "Interior": "内陆", "Coastal": "沿海", "Coast": "海岸",
+    "Greater": "大", "Metro": "都市区", "Metropolitan": "都市区",
+    "Surrounding": "周边", "Including": "包括",
+    "Valley": "谷地", "Valleys": "谷地",
+    "Mountains": "山区", "Mountain": "山",
+    "Plains": "平原", "Plateau": "高原",
+    "Peninsula": "半岛", "Panhandle": "柄地",
+    "Island": "岛", "Islands": "群岛",
+    "County": "县", "Counties": "各县",
+    "Region": "地区", "Area": "区域", "Zone": "地带",
+    "Waters": "水域", "Coastal Waters": "近海水域",
+    "Offshore": "近海", "Nearshore": "近岸",
+    "Portions of": "部分地区", "Parts of": "部分地区",
+}
+
 # 所有涉及州（用于全局极端天气扫描）
 ALL_STATES = []
 for _r in REGIONS.values():
